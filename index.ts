@@ -4,6 +4,7 @@ import { Command } from "commander";
 import { Subject } from "rxjs";
 import inquirer from "inquirer";
 import chalk from "chalk";
+import wwj from "whatsapp-web.js";
 import { oraPromise } from "ora";
 import { printHelpMessage } from "./utils/values.js";
 
@@ -17,11 +18,11 @@ import {
 } from "./server.js";
 
 const program = new Command();
-const prompts = new Subject();
+const prompts = new Subject<any>();
 export function initClient() {
-  prompts.next(makePrompt());
+  prompts.next(makePrompt(null));
 }
-function makePrompt(msg) {
+function makePrompt(msg: string | null) {
   return {
     type: "input",
     name: `userInput-${i}`,
@@ -31,7 +32,7 @@ function makePrompt(msg) {
 
 let i = 0;
 inquirer.prompt(prompts).ui.process.subscribe(
-  async ({ answer }) => {
+  async ({ answer }): Promise<void> => {
     if (answer !== "") {
       i++;
       const args = answer.split(" ");
@@ -52,12 +53,13 @@ inquirer.prompt(prompts).ui.process.subscribe(
       } else if (command === "group") {
         const command2 = args.shift();
         if (command2 === "send") {
-          let chats;
+          let chats1;
           try {
-            chats = await getGroups();
+            chats1 = await getGroups();
           } catch {
             console.log(chalk.redBright("Failed to fetch groups"));
           } finally {
+            const chats = chats1 as wwj.Chat[];
             if (args[0] === "_" || !chats[args[0]]) {
               for (let j = 0; j < chats.length; j++) {
                 console.log(j, chats[j].name);
@@ -81,12 +83,13 @@ inquirer.prompt(prompts).ui.process.subscribe(
             }
           }
         } else if (command2 === "media") {
-          let chats;
+          let chats1;
           try {
-            chats = await getGroups();
+            chats1 = await getGroups();
           } catch {
             console.log(chalk.redBright("Failed to fetch groups"));
           } finally {
+            const chats = chats1 as wwj.Chat[];
             if (args[0] === "_") {
               for (let j = 0; j < chats.length; j++) {
                 console.log(j, chats[j].name);
