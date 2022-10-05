@@ -2,24 +2,34 @@ import pkg from "whatsapp-web.js";
 const { Client, LocalAuth, MessageMedia } = pkg;
 import qrcode from "qrcode-terminal";
 import ora from "ora";
-import { printHelpMessage } from "./utils/values";
+import { printHelpMessage } from "./utils/values.js";
 import { initClient } from "./index.js";
 export const server = new Client({
   authStrategy: new LocalAuth(),
 });
 
+let neededQr = false;
 const startingSpinner = ora("Starting server");
+const waitingForAuthSpinner = ora("Waiting for authentication");
 
 // number required: 972556668191 - without the +
 
 server.on("qr", (qr): void => {
-  startingSpinner.text = "Waiting for authentication";
+  startingSpinner.succeed();
+  waitingForAuthSpinner.start();
+  neededQr = true;
+
   qrcode.generate(qr, { small: true });
 });
 
 server.on("ready", (): void => {
-  startingSpinner.text = "Done";
-  startingSpinner.succeed();
+  if (!neededQr) {
+    startingSpinner.text = "Done";
+    startingSpinner.succeed();
+  } else {
+    waitingForAuthSpinner.text = "authenticated";
+    waitingForAuthSpinner.succeed();
+  }
   printHelpMessage();
   initClient();
 });
