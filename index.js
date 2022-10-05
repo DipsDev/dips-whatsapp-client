@@ -4,7 +4,7 @@ import { Command } from "commander";
 import { Subject } from "rxjs";
 import inquirer from "inquirer";
 import chalk from "chalk";
-import ora, { oraPromise } from "ora";
+import { oraPromise } from "ora";
 import { printHelpMessage } from "./utils/values.js";
 
 import {

@@ -2,7 +2,6 @@ import pkg from "whatsapp-web.js";
 const { Client, LocalAuth, MessageMedia } = pkg;
 import qrcode from "qrcode-terminal";
 import ora from "ora";
-import chalk from "chalk";
 import { printHelpMessage } from "./utils/values.js";
 import { initClient } from "./index.js";
 export const server = new Client({
