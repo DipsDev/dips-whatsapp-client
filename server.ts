@@ -16,10 +16,10 @@ const waitingForAuthSpinner = ora("Waiting for authentication");
 
 server.on("qr", (qr): void => {
   startingSpinner.succeed();
-  waitingForAuthSpinner.start();
   neededQr = true;
 
   qrcode.generate(qr, { small: true });
+  waitingForAuthSpinner.start();
 });
 
 server.on("ready", (): void => {

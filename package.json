@@ -1,6 +1,6 @@
 {
   "name": "dips-client",
-  "version": "1.0.42",
+  "version": "1.0.44",
   "description": "",
   "homepage": "https://dipsdev.github.io/",
   "main": "./dist/index.js",
