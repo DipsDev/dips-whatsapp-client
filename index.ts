@@ -7,6 +7,11 @@ import chalk from "chalk";
 import wwj from "whatsapp-web.js";
 import { oraPromise } from "ora";
 import { printHelpMessage } from "./utils/values.js";
+import {
+  handleGroupMedia,
+  handleGroupSend,
+  handleSendMessage,
+} from "./utils/commands.js";
 
 import {
   getGroups,
@@ -38,96 +43,18 @@ inquirer.prompt(prompts).ui.process.subscribe(
       const args = answer.split(" ");
       const command = args.shift();
       if (command == "send") {
-        const number = args.shift();
-        const body =
-          args.length != 0 ? args.join(" ") : "Hello World from dipsc!";
-        try {
-          await oraPromise(sendMessage(number, body), {
-            text: "Sending message",
-            successText: "Message sent!",
-            failText: "Failed to send message!",
-          });
-        } catch {}
+        await handleSendMessage(args);
       } else if (command === "help") {
         printHelpMessage();
       } else if (command === "group") {
         const command2 = args.shift();
         if (command2 === "send") {
-          let chats1;
-          try {
-            chats1 = await getGroups();
-          } catch {
-            console.log(chalk.redBright("Failed to fetch groups"));
-          } finally {
-            const chats = chats1 as wwj.Chat[];
-            if (args[0] === "_" || !chats[args[0]]) {
-              for (let j = 0; j < chats.length; j++) {
-                console.log(j, chats[j].name);
-              }
-            } else {
-              let cooldown = !isNaN(args[1]) ? args[1] : 10;
-              try {
-                await oraPromise(
-                  sendGroupMessage(
-                    chats[args[0]].id._serialized,
-                    cooldown,
-                    args.slice(2).join(" ")
-                  ),
-                  {
-                    text: "Sending messages to the group's participants",
-                    failText: "Failed to send messages!",
-                    successText: "Messages were sent successfully!",
-                  }
-                );
-              } catch {}
-            }
-          }
+          await handleGroupSend(args);
         } else if (command2 === "media") {
-          let chats1;
-          try {
-            chats1 = await getGroups();
-          } catch {
-            console.log(chalk.redBright("Failed to fetch groups"));
-          } finally {
-            const chats = chats1 as wwj.Chat[];
-            if (args[0] === "_") {
-              for (let j = 0; j < chats.length; j++) {
-                console.log(j, chats[j].name);
-              }
-            } else {
-              args[2] =
-                args[2] === "local" || args[2] === "url" ? args[2] : "url";
-              let cooldown = !isNaN(args[3]) ? args[3] : 10;
-              try {
-                await oraPromise(
-                  sendGroupMedia(
-                    chats[args[0]].id._serialized,
-                    args[1],
-                    args[2],
-                    cooldown,
-                    args.slice(4).join(" ")
-                  ),
-                  {
-                    text: "Sending messages to the group's participants",
-                    failText: "Failed to send messages!",
-                    successText: "Messages were sent successfully!",
-                  }
-                );
-              } catch {}
-            }
-          }
+          await handleGroupMedia(args);
         }
       } else if (command === "media") {
-        const number = args.shift();
-        const path = args.shift();
-        const localUrl =
-          args[0] == "local" || args[0] == "url" ? args.shift() : "url";
-        const body = args.join(" ");
-        await oraPromise(sendMedia(number, path, localUrl, body), {
-          text: "Sending Media",
-          failText: "Failed to send media!",
-          successText: "Media was sent successfully!",
-        });
+        await handleGroupMedia(args);
       }
       prompts.next(makePrompt(`>>>`));
     } else {

@@ -102,7 +102,7 @@ export var sendGroupMedia = async (
         const contact = await server.getChatById(
           group.participants[i].id._serialized
         );
-        await sleep(cooldown * 1000 * i);
+        await sleep(cooldown * 1000);
         await contact.sendMessage(media, { caption: body });
       }
     }
@@ -117,6 +117,7 @@ export var sendGroupMessage = async (
   body: string
 ) => {
   try {
+    // TODO: read bypass.txt file
     var chat = await server.getChatById(groupid);
     const group = chat as pkg.GroupChat;
 
