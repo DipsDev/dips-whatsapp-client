@@ -7,7 +7,7 @@ import {
   sendGroupMessage,
   sendGroupMedia,
   sendMedia,
-} from "../server";
+} from "../server.js";
 export async function handleSendMessage(args: string[]) {
   const number = args.shift();
   const body = args.length > 0 ? args.join(" ") : "Hello World from dipsc!";

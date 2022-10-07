@@ -4,8 +4,6 @@ import { Command } from "commander";
 import { Subject } from "rxjs";
 import inquirer from "inquirer";
 import chalk from "chalk";
-import wwj from "whatsapp-web.js";
-import { oraPromise } from "ora";
 import { printHelpMessage } from "./utils/values.js";
 import {
   handleGroupMedia,
@@ -13,14 +11,7 @@ import {
   handleSendMessage,
 } from "./utils/commands.js";
 
-import {
-  getGroups,
-  sendGroupMedia,
-  sendGroupMessage,
-  sendMedia,
-  sendMessage,
-  startServer,
-} from "./server.js";
+import { startServer } from "./server.js";
 
 const program = new Command();
 const prompts = new Subject<any>();
