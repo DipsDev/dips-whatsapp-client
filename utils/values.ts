@@ -6,8 +6,8 @@ export const ACTIONS: string[] = [
   "help",
   "send <number> <body>",
   "media <number> <path/url> (body)",
-  "group send (index: _ for help) <time between messages, in seconds> <body> (--bypasslist)",
-  "group media (index: _ for help) <path/url> <time between messages, in seconds> (body) (--bypasslist)",
+  "group send (index: _ for help) <time between messages, in seconds> <body>",
+  "group media (index: _ for help) <path/url> <time between messages, in seconds> (body)",
 ];
 export const DESCS: string[] = [
   "Shows the help message",

@@ -120,13 +120,12 @@ export var sendGroupMessage = async (
     // TODO: read bypass.txt file
     var chat = await server.getChatById(groupid);
     const group = chat as pkg.GroupChat;
-
     for (let i = 0; i < group.participants.length; i++) {
-      if (group.participants[i].id.user == server.info.wid.user) continue;
+      if (group.participants[i].id.user === server.info.wid.user) continue;
       const contact = await server.getChatById(
         group.participants[i].id._serialized
       );
-      await sleep(cooldown * 1000 * i);
+      await sleep(cooldown * 1000);
       await contact.sendMessage(body);
     }
   } catch (err) {

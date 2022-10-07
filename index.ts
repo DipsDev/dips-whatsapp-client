@@ -8,6 +8,7 @@ import { printHelpMessage } from "./utils/values.js";
 import {
   handleGroupMedia,
   handleGroupSend,
+  handleMedia,
   handleSendMessage,
 } from "./utils/commands.js";
 
@@ -45,7 +46,7 @@ inquirer.prompt(prompts).ui.process.subscribe(
           await handleGroupMedia(args);
         }
       } else if (command === "media") {
-        await handleGroupMedia(args);
+        await handleMedia(args);
       }
       prompts.next(makePrompt(`>>>`));
     } else {

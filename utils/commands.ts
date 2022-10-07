@@ -22,38 +22,35 @@ export async function handleSendMessage(args: string[]) {
 }
 
 export async function handleGroupSend(args: string[]) {
-  const command2 = args.shift();
-  if (command2 === "send") {
-    let chats1;
-    try {
-      chats1 = await getGroups();
-    } catch {
-      console.log(chalk.redBright("Failed to fetch groups"));
-    } finally {
-      const chats = chats1 as wwj.Chat[];
-      if (args[0] === "_" || !chats[parseInt(args[0])]) {
-        for (let j = 0; j < chats.length; j++) {
-          console.log(j, chats[j].name);
-        }
-      } else {
-        let cooldown = !isNaN(+args[1]) ? parseInt(args[1]) : 10;
-
-        try {
-          const body = args.slice(2).join(" ");
-          await oraPromise(
-            sendGroupMessage(
-              chats[parseInt(args[0])].id._serialized,
-              cooldown,
-              body
-            ),
-            {
-              text: "Sending messages to the group's participants",
-              failText: "Failed to send messages!",
-              successText: "Messages were sent successfully!",
-            }
-          );
-        } catch {}
+  let chats1;
+  try {
+    chats1 = await getGroups();
+  } catch {
+    console.log(chalk.redBright("Failed to fetch groups"));
+  } finally {
+    const chats = chats1 as wwj.Chat[];
+    if (args[0] === "_" || !chats[parseInt(args[0])]) {
+      for (let j = 0; j < chats.length; j++) {
+        console.log(j, chats[j].name);
       }
+    } else {
+      let cooldown = !isNaN(+args[1]) ? parseInt(args[1]) : 10;
+
+      try {
+        const body = args.slice(2).join(" ");
+        await oraPromise(
+          sendGroupMessage(
+            chats[parseInt(args[0])].id._serialized,
+            cooldown,
+            body
+          ),
+          {
+            text: "Sending messages to the group's participants",
+            failText: "Failed to send messages!",
+            successText: "Messages were sent successfully!",
+          }
+        );
+      } catch {}
     }
   }
 }
